@@ -180,27 +180,45 @@ function F(n){return n!=null?Number(n).toLocaleString("es-AR"):"—"}
 function ds(){return new Date().toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long"})}
 function ts(){return new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}
 
+// Convierte texto a número aceptando coma O punto como decimal
+function pf(v){
+  if(v==null)return 0;
+  v=(""+v).trim().replace(",",".");
+  if(v===""||v===".")return 0;
+  var n=parseFloat(v);
+  return isNaN(n)?0:n;
+}
+
 function R(){
-  const bb=Number(document.getElementById("bb").value)||0;
-  const sb=Number(document.getElementById("sb").value)||0;
+  const bb=pf(document.getElementById("bb").value);
+  const sb=pf(document.getElementById("sb").value);
   P=C.map(c=>c.t==="base"?{...c,buy:Math.round(bb),sell:Math.round(sb)}:{...c,buy:cp(bb,c.t,c.bf),sell:cp(sb,c.t,c.sf)});
   document.getElementById("cd").textContent=ds()+" • "+ts();
   document.getElementById("prs").innerHTML=P.map((p,i)=>
     '<div class="pr '+(i%2===0?'ev':'')+'"><div class="pr-d"><span class="pr-e">'+p.e+'</span><span class="pr-n">'+p.n+'</span></div><div class="pr-b">$'+F(p.buy)+'</div><div class="pr-s">$'+F(p.sell)+'</div></div>'
   ).join("");
-  RF(bb,sb);RW();
+  updFP(bb,sb);RW();save();
 }
 
-function RF(bb,sb){
+// Construye los campos de factores UNA sola vez (no se rehacen al tipear)
+function RF(){
   document.getElementById("frs").innerHTML=C.filter(function(c){return c.t!=="base"}).map(function(c){
-    var pB=cp(bb,c.t,c.bf),pS=cp(sb,c.t,c.sf);
-    return '<div class="fr"><div class="fr-h"><span class="fr-e">'+c.e+'</span><span class="fr-n">'+c.n+'</span><span class="fr-t">'+TL[c.t]+'</span></div><div class="row"><div class="col"><div class="fl lbl-g">Factor compra</div><input type="number" step="0.01" class="fi-g" value="'+c.bf+'" oninput="UF(\''+c.id+'\',\'bf\',this.value)"><div class="fp fp-g">'+fs(bb,c.t,c.bf)+' = <b>$'+F(pB)+'</b></div></div><div class="col"><div class="fl lbl-r">Factor venta</div><input type="number" step="0.01" class="fi-r" value="'+c.sf+'" oninput="UF(\''+c.id+'\',\'sf\',this.value)"><div class="fp fp-r">'+fs(sb,c.t,c.sf)+' = <b>$'+F(pS)+'</b></div></div></div></div>';
+    return '<div class="fr"><div class="fr-h"><span class="fr-e">'+c.e+'</span><span class="fr-n">'+c.n+'</span><span class="fr-t">'+TL[c.t]+'</span></div><div class="row"><div class="col"><div class="fl lbl-g">Factor compra</div><input type="text" inputmode="decimal" class="fi-g" id="fi-'+c.id+'-bf" value="'+c.bf+'" oninput="UF(\''+c.id+'\',\'bf\',this.value)"><div class="fp fp-g" id="fp-'+c.id+'-bf"></div></div><div class="col"><div class="fl lbl-r">Factor venta</div><input type="text" inputmode="decimal" class="fi-r" id="fi-'+c.id+'-sf" value="'+c.sf+'" oninput="UF(\''+c.id+'\',\'sf\',this.value)"><div class="fp fp-r" id="fp-'+c.id+'-sf"></div></div></div></div>';
   }).join("");
+}
+
+// Solo refresca los textos de precio (no toca los inputs -> no se pierde el foco)
+function updFP(bb,sb){
+  C.filter(function(c){return c.t!=="base"}).forEach(function(c){
+    var pB=cp(bb,c.t,c.bf),pS=cp(sb,c.t,c.sf);
+    var eb=document.getElementById("fp-"+c.id+"-bf");if(eb)eb.innerHTML=fs(bb,c.t,c.bf)+' = <b>$'+F(pB)+'</b>';
+    var es=document.getElementById("fp-"+c.id+"-sf");if(es)es.innerHTML=fs(sb,c.t,c.sf)+' = <b>$'+F(pS)+'</b>';
+  });
 }
 
 function UF(id,f,v){
   var c=C.find(function(x){return x.id===id});
-  if(c)c[f]=v===""?0:Number(v);
+  if(c)c[f]=pf(v);
   R();
 }
 
@@ -252,10 +270,17 @@ function CW(){
   }
 }
 
+// Guardado automático en cada cambio
+function save(){
+  try{
+    var d={bb:pf(document.getElementById("bb").value),sb:pf(document.getElementById("sb").value),
+      f:C.filter(function(c){return c.t!=="base"}).map(function(c){return{id:c.id,bf:c.bf,sf:c.sf}})};
+    localStorage.setItem("cot",JSON.stringify(d));
+  }catch(e){}
+}
+
 function SV(){
-  var d={bb:Number(document.getElementById("bb").value),sb:Number(document.getElementById("sb").value),
-    f:C.filter(function(c){return c.t!=="base"}).map(function(c){return{id:c.id,bf:c.bf,sf:c.sf}})};
-  try{localStorage.setItem("cot",JSON.stringify(d))}catch(e){}
+  save();
   var b=document.getElementById("bs");b.classList.add("ok");b.textContent="✅ Guardado!";
   setTimeout(function(){b.classList.remove("ok");b.textContent="💾 Guardar factores"},2000);
 }
@@ -271,7 +296,7 @@ function LD(){
   }catch(e){}
 }
 
-LD();R();
+LD();RF();R();
 setInterval(function(){document.getElementById("cd").textContent=ds()+" • "+ts()},60000);
 </script>
 </body>
