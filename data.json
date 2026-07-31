@@ -1,0 +1,35 @@
+{
+  "actualizado": null,
+  "base": {
+    "compra": 1380,
+    "venta": 1440
+  },
+  "overrides": {},
+  "factores": {
+    "euro": {
+      "tipo": "multiplicar",
+      "compra": 1.19,
+      "venta": 1.25
+    },
+    "euro500": {
+      "tipo": "multiplicar",
+      "compra": 1.06,
+      "venta": 1.14
+    },
+    "real": {
+      "tipo": "dividir",
+      "compra": 5.2,
+      "venta": 4.8
+    },
+    "oro": {
+      "tipo": "multiplicar",
+      "compra": 130,
+      "venta": 140
+    },
+    "usdt": {
+      "tipo": "porcentaje",
+      "compra": 0,
+      "venta": 3
+    }
+  }
+}
