@@ -8,8 +8,8 @@
   "factores": {
     "euro": {
       "tipo": "multiplicar",
-      "compra": 1.19,
-      "venta": 1.25
+      "compra": 1.15,
+      "venta": 1.19
     },
     "euro500": {
       "tipo": "multiplicar",
