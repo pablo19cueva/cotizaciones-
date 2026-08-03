@@ -28,8 +28,8 @@
     },
     "usdt": {
       "tipo": "porcentaje",
-      "compra": 0,
-      "venta": 3
+      "compra": 0.5,
+      "venta": 3.0
     }
   },
   "canal": -1004396329534
