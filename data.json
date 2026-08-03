@@ -23,8 +23,8 @@
     },
     "oro": {
       "tipo": "multiplicar",
-      "compra": 130,
-      "venta": 140
+      "compra": 112.0,
+      "venta": 125.0
     },
     "usdt": {
       "tipo": "porcentaje",
