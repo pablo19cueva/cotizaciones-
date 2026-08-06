@@ -13,8 +13,8 @@
     },
     "euro500": {
       "tipo": "multiplicar",
-      "compra": 1.12,
-      "venta": 1.18
+      "compra": 1.11,
+      "venta": 1.17
     },
     "real": {
       "tipo": "dividir",
