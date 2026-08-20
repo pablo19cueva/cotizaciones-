@@ -19,7 +19,7 @@
     "real": {
       "tipo": "dividir",
       "compra": 5.2,
-      "venta": 4.8
+      "venta": 4.9
     },
     "oro": {
       "tipo": "multiplicar",
