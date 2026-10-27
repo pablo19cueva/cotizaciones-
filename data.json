@@ -8,8 +8,8 @@
   "factores": {
     "euro": {
       "tipo": "multiplicar",
-      "compra": 1.14,
-      "venta": 1.18
+      "compra": 1.12,
+      "venta": 1.17
     },
     "euro500": {
       "tipo": "multiplicar",
@@ -32,5 +32,9 @@
       "venta": 3.0
     }
   },
-  "canal": -1002547207653
+  "canal": -1002547207653,
+  "onza": {
+    "valor": 4024.699951,
+    "actualizado": "2026-10-27T10:00:00-03:00"
+  }
 }
